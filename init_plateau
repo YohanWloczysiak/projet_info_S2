@@ -1,0 +1,43 @@
+#définition des régles et mouvements des pièces
+
+#importation des modules nécessaires
+import numpy as np
+
+#initialsation du jeu
+PN1 =((1,0),"pion","noir",1)
+PN2 =((1,1),"pion","noir",2)
+PN3 =((1,2),"pion","noir",3)
+PN4 =((1,3),"pion","noir",4)
+PN5 =((1,4),"pion","noir",5)
+PN6 =((1,5),"pion","noir",6)
+PN7 =((1,6),"pion","noir",7)
+PN8 =((1,7),"pion","noir",8)
+
+TN1 = ((0,0),"tour","noir",1)
+CN1 = ((0,1),"cavalier","noir",1)
+FN1 = ((0,2),"fou","noir",1)        #fou qui n'ira que sur les cases blanches
+DN = ((0,3),"dame","noir",1)
+RN = ((0,4),"roi","noir",1)
+FN2 = ((0,5),"fou","noir",2)        #fou qui n'ira que sur les cases noires
+CN2 = ((0,6),"cavalier","noir",2)
+TN2 = ((0,7),"tour","noir",2)
+
+PB1 =((6,0),"pion","blanc",1)
+PB2 =((6,0),"pion","blanc",2)
+PB3 =((6,0),"pion","blanc",3)
+PB4 =((6,0),"pion","blanc",4)
+PB5 =((6,0),"pion","blanc",5)
+PB6 =((6,0),"pion","blanc",6)
+PB7 =((6,0),"pion","blanc",7)
+PB8 =((6,0),"pion","blanc",8)
+
+TB1 = ((7,0),"tour","blanc",1)
+CB1 = ((7,1),"cavalier","blanc",1)
+FB2 = ((7,2),"fou","blanc",2)       #fou qui n'ira que sur les cases noires
+DB = ((7,3),"dame","blanc",1)
+RB = ((7,4),"roi","blanc",1)
+FB1 = ((7,5),"fou","blanc",1)       #fou qui n'ira que sur les cases blanches
+CB2 = ((7,6),"cavalier","blanc",2)
+TB2 = ((7,7),"tour","blanc",2)
+
+plateau = np.array([[TN1,CN1,FN1,DN,RN,FN2,CN2,TN2],[PN1,PN2,PN3,PN4,PN5,PN6,PN7,PN8],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[PB1,PB2,PB3,PB4,PB5,PB6,PB7,PB8],[TB1,CB1,FB2,DB,RB,FB1,CB2,TB2]])
