@@ -67,8 +67,8 @@ def deplacement_fou(p, a , b):
             else:
                 if plateau[a,b][2] != color:            # élimination d'une pièce
                     return (a, b),  plateau[a, b]
-            else:                                       # case occupée par une pièce de même couleur
-                raise ValueError("Le déplacement est impossible")   
+                else:                                       # case occupée par une pièce de même couleur
+                    raise ValueError("Le déplacement est impossible")   
         else:
             raise ValueError("Le déplacement est impossible")
         
