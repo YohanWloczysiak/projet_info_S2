@@ -4,129 +4,181 @@ REGLES DU JEU D'ECHECS - FONCTIONS DE DEPLACEMENTS DES PIECES
 
 """
     
-def deplacement_pion(p, a, b):
+def deplacement_pion(p, a, b, plateau):
     assert 0 <= a < 7
     assert 0 <= b <= 7
     (X, Y) = p[0]
     color = p[2]
     if (a == 0 and color == "blanc") or (a == 7 and color == "noir"):
         piece = input("Choisissez une pièce pour échanger votre pion : dame, cavalier, fou")
-        p = promotion(p, piece)
+        p = promotion(p, piece, plateau)
     else : 
         pass
     if b in {Y+1, Y-1} and plateau[a, b] != 0 :    
-        dead = prise_en_passant(p, a, b)
+        dead = prise_en_passant(p, a, b, plateau)
         if dead != None :                         # prise en passant
             morts.append(dead)
-            return (a, b)
+            plateau[X,Y] = 0
+            p[0] = [a,b]
+            plateau[a,b] = p
+            return [a, b]
         elif plateau[a, b][2] != color :          # élimination simple d'une pièce
             morts.append(plateau[a, b])
-            return (a, b)
+            plateau[X,Y] = 0
+            p[0] = [a,b]
+            plateau[a,b] = p
+            return [a, b]
         else :
-            raise ValueError("Une autre pièce se trouve déjà sur cette case")  
+            print("Une autre pièce se trouve déjà sur cette case") 
+            return None
     elif b == Y and plateau[a,b] == 0 :             # déplacement simple
         if color == "noir" :                        # le pion est noir
             if a == X+2 and X!= 1 :
-                raise ValueError("Le déplacement est impossible") 
-            elif a == X+1 or b == X+2 :     
+                print("Le déplacement est impossible") 
+                return None
+            elif a == X+1 or b == X+2 :
+                plateau[X,Y] = 0
+                p[0] = (a,b)
+                plateau[a,b] = p
                 return (a,b)
             else :
-                raise ValueError("Le déplacement est impossible") 
+                print("Le déplacement est impossible")
+                return None
         else :                                       # le pion est blanc
             if a == X-2 and X != 1 :
-                raise ValueError("Le déplacement est impossible") 
+                print("Le déplacement est impossible") 
+                return None
             elif a == X-1 or a == X-2 :
+                plateau[X,Y] = 0
+                p[0] = (a,b)
+                plateau[a,b] = p
                 return (a,b) 
     else :                                           # case occupée par une pièce de même couleur
-             raise ValueError("Le déplacement est impossible") 
+             print("Le déplacement est impossible") 
+             return None
   
         
-def deplacement_tour(p, a, b):   ## inclure traverse_tour
+def deplacement_tour(p, a, b, plateau):   
     assert 0 <= a < 7
     assert 0 <= b <= 7
     (X, Y) = p[0]
     color = p[2]
     if a != X and b != Y:
-        raise ValueError("Le déplacement est impossible") 
+        print("Le déplacement est impossible")
+        return None
     elif plateau[a, b] == 0 :                        # déplacement simple                          
         if traverse_tour(a, b, X, Y) == True :
+            plateau[X,Y] = 0
+            p[0] = (a,b)
+            plateau[a,b] = p
             return (a, b)
         else:
-            raise ValueError("Vous traversez une pièce")
+            print("Vous traversez une pièce")
+            return None
     else:                                       
             if plateau[a,b][2] != color :             # élimination d'une pièce
-                if traverse_tour(a, b, X, Y) == True :
+                if traverse_tour(a, b, X, Y, plateau) == True :
                     morts.append(plateau[a, b])
+                    plateau[X,Y] = 0
+                    p[0] = (a,b)
+                    plateau[a,b] = p
                     return (a, b)
                 else:
-                    raise ValueError("Vous traversez une pièce")
+                    print("Vous traversez une pièce")
+                    return None
             else:                                     # case occupée par une pièce de même couleur
-                raise ValueError("Le déplacement est impossible")
+                print("Le déplacement est impossible")
+                return None
                 
-def deplacement_roi(p, a, b) :
+def deplacement_roi(p, a, b, plateau) :
     assert 0 <= a < 7
     assert 0 <= b <= 7
     (X, Y) = p[0]
     color = p[2]
     if a in {X+1, X, X-1} and b in {Y+1, Y, Y-1} :
         if plateau[a,b] == 0:                       # déplacement simple
+            plateau[X,Y] = 0
+            p[0] = (a,b)
+            plateau[a,b] = p
             return (a, b)
         else:
             if plateau[a,b][2] != color :           # élimination d'une pièce
                 morts.append(plateau[a, b])
+                plateau[X,Y] = 0
+                p[0] = (a,b)
+                plateau[a,b] = p
                 return (a, b)
             else:                                   # case occupée par une pièce de même couleur
-                raise ValueError("Une autre pièce se trouve déjà sur cette case")
+                print("Une autre pièce se trouve déjà sur cette case")
+                return None
     else:
-        raise ValueError("Le déplacement est impossible")
+        print("Le déplacement est impossible")
+        return None
         
-def deplacement_fou(p, a , b) :        ## écrire traverse_fou 
+def deplacement_fou(p, a , b, plateau) :        
     assert 0 <= a < 7
     assert 0 <= b <= 7
     (X, Y) = p[0]
     color = p[2]
-    if traverse_fou(a, b, X, Y) == False :
-        raise ValueError("Vous traversez une pièce")
+    if traverse_fou(a, b, X, Y, plateau) == False :
+        print("Vous traversez une pièce")
+        return None
     else:
         for k in range(0, 8) :
             if (X - a) in {k, -k} and (Y - b) in {k, -k}: 
                 if plateau[a,b] == 0 :                        # déplacement simple
+                    plateau[X,Y] = 0
+                    p[0] = (a,b)
+                    plateau[a,b] = p
                     return (a, b)                         
                 elif plateau[a,b][2] != color :               # élimination d'une pièce
                     morts.append(plateau[a, b])   
+                    plateau[X,Y] = 0
+                    p[0] = (a,b)
+                    plateau[a,b] = p
                     return (a, b)
                 else :                                       # case occupée par une pièce de même couleur
-                        raise ValueError("Une autre pièce se trouve déjà sur cette case")   
+                    print("Une autre pièce se trouve déjà sur cette case")  
+                    return None
             else :
-                raise ValueError("Le déplacement est impossible")
+                print("Le déplacement est impossible")
+                return None
         
-def deplacement_dame(p, a, b) :
+def deplacement_dame(p, a, b, plateau) :
     (X, Y) = p[0]
     if a == X or b == Y :                               # déplacement selon une ligne/colonne
-        deplacement_tour(p, a, b)                       
+        deplacement_tour(p, a, b, plateau)                       
     else:                                               # déplacement sur une diagonale
-        deplacement_fou(p, a, b)
+        deplacement_fou(p, a, b, plateau)
     
-def deplacement_cavalier(p, a, b) :
+def deplacement_cavalier(p, a, b, plateau) :
     assert 0 <= a < 7
     assert 0 <= b <= 7
     (X, Y) = p[0]
     color = p[2]
     for k in range(0, 8):   
         if (X - a) in {-1, 1} and (Y - b) in {-2, 2} or (X - a) in {-2, 2} and (Y - b) in {-1, 1} :
-            if plateau[a,b] == 0 :
-                return (a, b)                            # déplacement simple
+            if plateau[a,b] == 0 :                      # déplacement simple
+                plateau[X,Y] = 0
+                p[0] = (a,b)
+                plateau[a,b] = p
+                return (a, b)                            
             else:
                 if plateau[a,b][2] != color :            # élimination d'une pièce
                     morts.append(plateau[a, b])
+                    plateau[X,Y] = 0
+                    p[0] = (a,b)
+                    plateau[a,b] = p
                     return (a, b)
                 else:                                    # case occupée par une pièce de même couleur
-                    raise ValueError("Une autre pièce se trouve déjà sur cette case")   
+                    print("Une autre pièce se trouve déjà sur cette case")  
+                    return None
         else:
-            raise ValueError("Le déplacement est impossible")
+            print("Le déplacement est impossible")
+            return None
     
         
-def traverse_tour(a, b, X, Y) :                         # renvoit si on peut se déplacer sans traverser de pièce
+def traverse_tour(a, b, X, Y, plateau) :                         # renvoit si on peut se déplacer sans traverser de pièce
     if a != X :                                         # déplacement horizontal
             if a < X :
                 for coord in range(a+1, X) :
@@ -147,7 +199,7 @@ def traverse_tour(a, b, X, Y) :                         # renvoit si on peut se 
                         return False
     return True
 
-def traverse_fou(a, b, X, Y) :
+def traverse_fou(a, b, X, Y, plateau) :
     if (X - a) > 0 and (Y - b) > 0 :            # X - a = Y - b = k
         for i in range(X + 1, a) :
             for j in range (Y + 1, b) :
@@ -170,22 +222,26 @@ def traverse_fou(a, b, X, Y) :
                     return False
     return True
     
-def roque(roi, tour) :
+def roque(roi, tour, plateau) :
     assert roi[2] == tour[2]
     if nb_echecs > 0 :
         raise ValueError("Roque impossible. Le roi a déjà été mis en échec.")
     else:
         if roi[2] == "noir":                    # roque noir
-            if roi[0] != (0, 4) and tour[0] not in {[0, 0], [0, 7]} :
+            if roi[0] != [0, 4] and tour[0] not in {[0, 0], [0, 7]} :
                 raise ValueError("Roque impossible. L'une des pièces a déjà été déplacée")
             else :
                 if tour[3] == 1 :               # grand roque
-                    roi[0] = (0, 2)
-                    tour[0] = (0, 3)
+                    roi[0] = [0, 2]
+                    tour[0] = [0, 3]
+                    plateau[0,2], plateau[0,3] = roi, tour
+                    plateau[0,4], plateau[0,0] = 0, 0
                     return roi, tour
                 else :                          # petit roque
                     roi[0] = (0, 6)
                     tour[0] = (0, 5)
+                    plateau[0,6], plateau[0,5] = roi, tour
+                    plateau[0,4], plateau[0,7] = 0, 0
                     return roi, tour
         else :                                  # roque noir
             if roi[0] != (7, 4) and tour[0] not in {[7, 0], [7, 7]} :
@@ -194,13 +250,17 @@ def roque(roi, tour) :
                 if tour[3] == 2 :               # grand roque
                     roi[0] = (7, 2)
                     tour[0] = (7, 3)
+                    plateau[7,2], plateau[7,3] = roi, tour
+                    plateau[7,4], plateau[7,0] = 0, 0
                     return roi, tour
                 else :                          # petit roque
                     roi[0] = (7, 6)
                     tour[0] = (7, 5)
+                    plateau[7,6], plateau[7,5] = roi, tour
+                    plateau[7,4], plateau[7,7] = 0, 0
                     return roi, tour
 
-def promotion(p, pièce) :
+def promotion(p, piece, plateau) :              
     color = pion[2]
     if piece == "dame":
         if color == "noir":
@@ -272,7 +332,7 @@ def indice(x, liste) :
         return None
     return indice
 
-def prise_en_passant(p, a, b) :
+def prise_en_passant(p, a, b, plateau) :
     color = p[2]
     if color == "noir" : 
         if plateau[a-1, b][1] == "pion" and plateau[a-1, b][2] == "blanc" :
@@ -284,3 +344,4 @@ def prise_en_passant(p, a, b) :
             return plateau[a-1, b]
         else :
             return None
+        
