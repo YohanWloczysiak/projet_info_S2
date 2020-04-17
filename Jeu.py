@@ -8,8 +8,8 @@ import copy
 def fin_de_partie(plateau) :                      
     if echec_et_mat(plateau) == False :
         return None
-    else :
-        test, couleur = test_echec(plateau)
+    else :                                                    # il y a échec et mat 
+        test, couleur = test_echec(plateau)                   # la couleur perdante est celle mise en échec
         if couleur == "blancs" :
             print("Victoire des noirs !!")
         else :
