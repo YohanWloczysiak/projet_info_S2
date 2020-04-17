@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
- FONCTIONS ASSOCIEES AU DEROULEMENT DU JEU
- 
+FONCTIONS ASSOCIEES AU DEROULEMENT DU JEU
 """
 
 import copy
@@ -65,17 +64,17 @@ def echec_et_mat(plateau):
     if test_echec(plateau) == False :
         pass
     else :
-        test, couleur = test_echec(plateau)
-        for piece in couleur :
-            liste = liste_deplacements_piece(piece, plateau)
+        test, couleur = test_echec(plateau)                         # couleur = couleur mise en échec
+        for piece in couleur :                                      # on teste toutes les pièces de la couleur mise en échec
+            liste = liste_deplacements_piece(piece, plateau)        # liste des déplacements possibles pour chaque pièce
             for couple in liste :
                 a = couple[0]
                 b = couple[1]
-                copie_plateau = copy.copy(plateau)
+                copie_plateau = copy.copy(plateau)                  # on effectue une copie du plateau pour simuler les déplacements
                 deplacement(piece, a, b, copie_plateau)
-                if test_echec(copie_plateau) == False :
+                if test_echec(copie_plateau) == False :             # on teste si après un déplacement possible, le joueur peut sortir de l'échec
                     return False
-                return True
+                return True   
                     
 
 def deplacement(p,a,b, plateau) :
