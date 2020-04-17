@@ -259,21 +259,21 @@ def roque(roi, tour, plateau, nb_echecs) :
                     plateau[7,4], plateau[7,7] = CV, CV
                     return roi, tour, plateau
 
-def promotion(p, piece, plateau) :
+def promotion(p, piece, plateau, morts) :
     color = pion[2]
     if piece == "dame":
         if color == "noir":
             if DN1 in morts :
                 DN1[0] = pion[0]
                 morts[indice[DN1, morts]] = p
-                return DN1
+                return DN1, morts
             else :
                 raise ValueError("promotion impossible")
         else :
             if DB1 in morts :
                 DB1[0] = pion[0]
                 morts[indice[DB1, morts]] = p
-                return DB1
+                return DB1, morts
             else :
                 raise ValueError("promotion impossible")
     elif piece == "cavalier":
@@ -281,22 +281,22 @@ def promotion(p, piece, plateau) :
             if CN1 in morts :
                 CN1[0] = pion[0]
                 morts[indice[CN1, morts]] = p
-                return CN1
+                return CN1, morts
             elif CN2 in morts :
                 CN2[0] = pion[0]
                 morts[indice[CN2, morts]] = p
-                return CN2
+                return CN2, morts
             else :
                 raise ValueError("promotion impossible")
         else :
             if CB1 in morts :
                 CB1[0] = pion[0]
                 morts[indice[CB1, morts]] = p
-                return CB1
+                return CB1, morts
             elif CB2 in morts :
                 CB2[0] = pion[0]
                 morts[indice[CB2, morts]] = p
-                return CB2
+                return CB2, morts
             else :
                 raise ValueError("promotion impossible")
     elif piece == "fou":
@@ -304,22 +304,22 @@ def promotion(p, piece, plateau) :
             if FN1 in morts :
                 FN1[0] = pion[0]
                 morts[indice[FN1, morts]] = p
-                return FN1
+                return FN1, morts
             elif FN2 in morts :
                 FN2[0] = pion[0]
                 morts[indice[FN2, morts]] = p
-                return FN2
+                return FN2, morts
             else :
                 raise ValueError("promotion impossible")
         else :
             if FB1 in morts :
                 FB1[0] = pion[0]
                 morts[indice[FB1, morts]] = p
-                return FB1
+                return FB1, morts
             elif FB2 in morts :
                 FB2[0] = pion[0]
                 morts[indice[FB2, morts]] = p
-                return FB2
+                return FB2, morts
             else :
                 raise ValueError("promotion impossible")
 
