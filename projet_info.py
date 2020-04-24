@@ -10,6 +10,7 @@ import tkinter
 FONCTIONS ASSOCIEES AU DEROULEMENT DU JEU
 """
 morts = []
+nb_echecs = { "blanc" : 0, "noir" : 0}
 
 import copy
 
@@ -23,16 +24,16 @@ def fin_de_partie(plateau) :
         else :
             print("Victoire des blancs !!")
 
-def liste_deplacements_possibles(color, plateau) :
+def liste_deplacements_possibles(color, plateau, morts) :
     liste_deplacements = []
     for piece in color :
         for a in range(0,8) :
             for b in range(0,8) :
-                if deplacement(piece,a,b) != None :
+                if deplacement(piece,a,b, plateau, morts) != None :
                     liste_deplacements.append([a,b])
     return liste_deplacements
 
-def liste_deplacements_piece(piece, plateau):
+def liste_deplacements_piece(piece, plateau, morts):
     liste_deplacements = []
     for a in range(0,8) :
         for b in range(0,8) :
@@ -40,18 +41,19 @@ def liste_deplacements_piece(piece, plateau):
                 liste_deplacements.append([a,b])
     return liste_deplacements
 
-def test_echec(plateau):
+def test_echec(plateau, morts, nb_echecs):
     noirs, blancs = find_color(plateau)
-    deplacements_noirs = liste_deplacements_possibles(noirs, plateau)
-    deplacements_blancs = liste_deplacements_possibles(blancs, plateau)
-    if RB1[0] in deplacements_noirs :
+    deplacements_noirs = liste_deplacements_possibles(noirs, plateau, morts)
+    deplacements_blancs = liste_deplacements_possibles(blancs, plateau, morts)
+    if RB[0] in deplacements_noirs :
+        nb_echecs["blanc"] += 1
         print("Le roi blanc est en échec")
-        return True, blancs
-    elif RN1[0] in deplacements_blancs :
+        return True, blancs, nb_echecs
+    elif RN[0] in deplacements_blancs :
+        nb_echecs["noir"] += 1
         print("Le roi noir est en échec")
-        return True, noirs
+        return True, noirs, nb_echecs
     return False
-
 
 def find_color(plateau):
     blancs, noirs = [], []
@@ -68,21 +70,23 @@ def find_color(plateau):
     return noirs, blancs
 
 
-def echec_et_mat(plateau):
-    if test_echec(plateau) == False :
+def echec_et_mat(plateau, morts, nb_echecs):
+    if test_echec(plateau, morts) == False :
         pass
     else :
-        test, couleur = test_echec(plateau)                         # couleur = couleur mise en échec
-        for piece in couleur :                                      # on teste toutes les pièces de la couleur mise en échec
-            liste = liste_deplacements_piece(piece, plateau)        # liste des déplacements possibles pour chaque pièce
+        test, couleur, nb_echecs = test_echec(plateau, morts)                         # couleur = couleur mise en échec
+        for piece in couleur :                                             # on teste toutes les pièces de la couleur mise en échec
+            liste = liste_deplacements_piece(piece, plateau, morts)        # liste des déplacements possibles pour chaque pièce
             for couple in liste :
                 a = couple[0]
                 b = couple[1]
-                copie_plateau = copy.copy(plateau)                  # on effectue une copie du plateau pour simuler les déplacements
-                deplacement(piece, a, b, copie_plateau)
-                if test_echec(copie_plateau) == False :             # on teste si après un déplacement possible, le joueur peut sortir de l'échec
+                copie_nb_echecs = copy.copy(nb_echecs)
+                copie_plateau = copy.copy(plateau)                         # on effectue une copie du plateau pour simuler les déplacements
+                deplacement(piece, a, b, copie_plateau, morts)
+                if test_echec(copie_plateau, morts, copie_nb_echecs) == False :             # on teste si après un déplacement possible, le joueur peut sortir de l'échec
                     return False
                 return True
+
 
 
 def deplacement(p,a,b, plateau, morts) :
@@ -345,7 +349,8 @@ def traverse_fou(a, b, X, Y, plateau) :
 
 def roque(roi, tour, plateau, nb_echecs) :
     assert roi[2] == tour[2]
-    if nb_echecs > 0 :
+    color = roi[2]
+    if nb_echecs[color] > 0 :
         raise ValueError("Roque impossible. Le roi a déjà été mis en échec.")
     else:
         if roi[2] == "noir":                    # roque noir
@@ -385,15 +390,15 @@ def promotion(p, piece, plateau, morts) :
     color = p[2]
     if piece == "dame":
         if color == "noir":
-            if DN1 in morts :
-                DN1[0] = pion[0]
+            if DN in morts :
+                DN[0] = pion[0]
                 morts[indice[DN1, morts]] = p
                 return DN1, morts
             else :
                 raise ValueError("promotion impossible")
         else :
-            if DB1 in morts :
-                DB1[0] = pion[0]
+            if DB in morts :
+                DB[0] = pion[0]
                 morts[indice[DB1, morts]] = p
                 return DB1, morts
             else :
