@@ -19,16 +19,22 @@ def liste_deplacements_possibles(color, plateau, morts) :
     for piece in color :
         for a in range(0,8) :
             for b in range(0,8) :
-                if deplacement(piece,a,b, plateau, morts) != None :
+                try :
+                    deplacement(piece,a,b,plateau, morts)
                     liste_deplacements.append([a,b])
+                except :
+                    pass
     return liste_deplacements
 
 def liste_deplacements_piece(piece, plateau, morts):
     liste_deplacements = []
     for a in range(0,8) :
         for b in range(0,8) :
-            if deplacement(piece,a,b,plateau, morts) != None :
+            try :
+                deplacement(piece,a,b,plateau, morts)
                 liste_deplacements.append([a,b])
+            except :
+                pass
     return liste_deplacements
 
 def test_echec(plateau, morts, nb_echecs):
@@ -50,7 +56,7 @@ def find_color(plateau):
     blancs, noirs = [], []
     for i in range(0,8):
         for j in range(0,8):
-            if plateau[i,j] == 0 :
+            if plateau[i,j][3] == 0 :
                 pass
             else:
                 piece = plateau[i,j]
@@ -65,7 +71,7 @@ def echec_et_mat(plateau, morts, nb_echecs):
     if test_echec(plateau, morts) == False :
         pass
     else :
-        test, couleur, nb_echecs = test_echec(plateau, morts)                         # couleur = couleur mise en échec
+        test, couleur, nb_echecs = test_echec(plateau, morts, nb_echecs)                         # couleur = couleur mise en échec
         for piece in couleur :                                             # on teste toutes les pièces de la couleur mise en échec
             liste = liste_deplacements_piece(piece, plateau, morts)        # liste des déplacements possibles pour chaque pièce
             for couple in liste :
@@ -75,8 +81,8 @@ def echec_et_mat(plateau, morts, nb_echecs):
                 copie_plateau = copy.copy(plateau)                         # on effectue une copie du plateau pour simuler les déplacements
                 deplacement(piece, a, b, copie_plateau, morts)
                 if test_echec(copie_plateau, morts, copie_nb_echecs) == False :             # on teste si après un déplacement possible, le joueur peut sortir de l'échec
-                    return False
-                return True
+                    return False   # il n'y a pas échec et mat
+                return True        # il y a pas échec et mat
 
 
 def deplacement(p,a,b, plateau, morts) :
