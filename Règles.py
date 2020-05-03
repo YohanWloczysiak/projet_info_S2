@@ -7,13 +7,8 @@ def deplacement_pion(p, a, b, plateau, morts):
     assert 0 <= b <= 7
     [X, Y] = p[0]
     color = p[2]
-    if (a == 0 and color == "blanc") or (a == 7 and color == "noir"):
-        piece = input("Choisissez une pièce pour échanger votre pion : dame, cavalier, fou")
-        p = promotion(p, piece, plateau, morts)
-    else :
-        pass
     if b in {Y+1, Y-1} and plateau[a,b][3] != 0 and ((a == X+1 and color == "noir") or (a == X-1 and color == "blanc")) :
-       if plateau[a, b][2] != color and plateau[a, b][2] != ""  :          # élimination simple d'une pièce
+        if plateau[a, b][2] != color and plateau[a, b][2] != ""  :          # élimination simple d'une pièce
             morts.append(plateau[a, b])
             plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
@@ -32,7 +27,7 @@ def deplacement_pion(p, a, b, plateau, morts):
             else :
                 raise ValueError("Le déplacement est impossible")
         else :                                       # le pion est blanc
-            if (a == X-2 and X == 1) or a == X-1:
+            if (a == X-2 and X == 6) or a == X-1:
                 plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                 p[0] = [a,b]
                 plateau[a,b] = p
