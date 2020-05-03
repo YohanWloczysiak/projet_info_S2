@@ -12,15 +12,8 @@ def deplacement_pion(p, a, b, plateau, morts):
         p = promotion(p, piece, plateau, morts)
     else :
         pass
-    if b in {Y+1, Y-1} and plateau[a,b][3] != 0 :
-        dead = prise_en_passant(p, a, b, plateau)
-        if dead != None :                         # prise en passant
-            morts.append(dead)
-            plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
-            p[0] = [a,b]
-            plateau[a,b] = p
-            return [a, b], plateau, morts
-        elif plateau[a, b][2] != color and plateau[a, b][2] != ""  :          # élimination simple d'une pièce
+    if b in {Y+1, Y-1} and plateau[a,b][3] != 0 and ((a == X+1 and color == "noir") or (a == X-1 and color == "blanc")) :
+       if plateau[a, b][2] != color and plateau[a, b][2] != ""  :          # élimination simple d'une pièce
             morts.append(plateau[a, b])
             plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
