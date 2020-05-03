@@ -19,8 +19,11 @@ def liste_deplacements_possibles(color, plateau, morts) :
     for piece in color :
         for a in range(0,8) :
             for b in range(0,8) :
+                copie_plateau = copy.copy(plateau)
+                copie_morts = copy.copy(morts)
+                copie_piece = copy.copy(piece)
                 try :
-                    deplacement(piece,a,b,plateau, morts)
+                    deplacement(copie_piece,a,b, copie_plateau, copie_morts)
                     liste_deplacements.append([a,b])
                 except :
                     pass
@@ -30,8 +33,11 @@ def liste_deplacements_piece(piece, plateau, morts):
     liste_deplacements = []
     for a in range(0,8) :
         for b in range(0,8) :
+            copie_plateau = copy.copy(plateau)
+            copie_morts = copy.copy(morts)
+            copie_piece = copy.copy(piece)
             try :
-                deplacement(piece,a,b,plateau, morts)
+                deplacement(copie_piece,a,b,copie_plateau, copie_morts)
                 liste_deplacements.append([a,b])
             except :
                 pass

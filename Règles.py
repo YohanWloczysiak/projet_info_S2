@@ -16,13 +16,13 @@ def deplacement_pion(p, a, b, plateau, morts):
         dead = prise_en_passant(p, a, b, plateau)
         if dead != None :                         # prise en passant
             morts.append(dead)
-            plateau[X,Y] = CV
+            plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
             plateau[a,b] = p
             return [a, b], plateau, morts
-        elif plateau[a, b][2] != color :          # élimination simple d'une pièce
+        elif plateau[a, b][2] != color and plateau[a, b][2] != ""  :          # élimination simple d'une pièce
             morts.append(plateau[a, b])
-            plateau[X,Y] = CV
+            plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
             plateau[a,b] = p
             return [a, b], plateau, morts
@@ -31,24 +31,21 @@ def deplacement_pion(p, a, b, plateau, morts):
             return None
     elif b == Y and plateau[a,b][3] == 0 :             # déplacement simple
         if color == "noir" :                        # le pion est noir
-            if a == X+2 and X!= 1 :
-                raise ValueError("Le déplacement est impossible")
-                return None
-            elif a == X+1 or a == X+2 :
-                plateau[X,Y] = CV
+            if (a == X+2 and X == 1) or a == X+1 :
+                plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                 p[0] = [a,b]
                 plateau[a,b] = p
                 return [a,b], plateau, morts
             else :
                 raise ValueError("Le déplacement est impossible")
         else :                                       # le pion est blanc
-            if a == X-2 and X != 1 :
-                raise ValueError("Le déplacement est impossible")
-            elif a == X-1 or a == X-2 :
-                plateau[X,Y] = CV
+            if (a == X-2 and X == 1) or a == X-1:
+                plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                 p[0] = [a,b]
                 plateau[a,b] = p
                 return [a,b], plateau, morts
+            else :
+                raise ValueError("Le déplacement est impossible")
     else :                                           # case occupée par une pièce de même couleur
              raise ValueError("Le déplacement est impossible")
 
@@ -62,7 +59,7 @@ def deplacement_tour(p, a, b, plateau, morts):
         raise ValueError("Le déplacement est impossible")
     elif plateau[a,b][3] == 0 :                        # déplacement simple
         if traverse_tour(a, b, X, Y, plateau) == True :
-            plateau[X,Y] = CV
+            plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
             plateau[a,b] = p
             return [a, b], plateau, morts
@@ -72,7 +69,7 @@ def deplacement_tour(p, a, b, plateau, morts):
             if plateau[a,b][2] != color :             # élimination d'une pièce
                 if traverse_tour(a, b, X, Y, plateau) == True :
                     morts.append(plateau[a, b])
-                    plateau[X,Y] = CV
+                    plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                     p[0] = [a,b]
                     plateau[a,b] = p
                     return [a, b], plateau, morts
@@ -88,14 +85,14 @@ def deplacement_roi(p, a, b, plateau, morts) :
     color = p[2]
     if a in {X+1, X, X-1} and b in {Y+1, Y, Y-1} :
         if plateau[a,b][3] == 0:                       # déplacement simple
-            plateau[X,Y] = CV
+            plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
             p[0] = [a,b]
             plateau[a,b] = p
             return [a, b], plateau, morts
         else:
             if plateau[a,b][2] != color :           # élimination d'une pièce
                 morts.append(plateau[a, b])
-                plateau[X,Y] = CV
+                plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                 p[0] = [a,b]
                 plateau[a,b] = p
                 return [a, b], plateau, morts
@@ -115,13 +112,13 @@ def deplacement_fou(p, a , b, plateau, morts) :
         for k in range(0, 8) :
             if (X - a) in {k, -k} and (Y - b) in {k, -k}:
                 if plateau[a,b][3] == 0 :                        # déplacement simple
-                    plateau[X,Y] = CV
+                    plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                     p[0] = [a,b]
                     plateau[a,b] = p
                     return [a, b], plateau, morts
                 elif plateau[a,b][2] != color :               # élimination d'une pièce
                     morts.append(plateau[a, b])
-                    plateau[X,Y] = CV
+                    plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                     p[0] = [a,b]
                     plateau[a,b] = p
                     return [a, b], plateau, morts
@@ -145,14 +142,14 @@ def deplacement_cavalier(p, a, b, plateau, morts) :
     for k in range(0, 8):
         if (X - a) in {-1, 1} and (Y - b) in {-2, 2} or (X - a) in {-2, 2} and (Y - b) in {-1, 1} :
             if plateau[a,b][3] == 0 :                      # déplacement simple
-                plateau[X,Y] = CV
+                plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                 p[0] = [a,b]
                 plateau[a,b] = p
                 return [a, b], plateau, morts
             else:
                 if plateau[a,b][2] != color :            # élimination d'une pièce
                     morts.append(plateau[a, b])
-                    plateau[X,Y] = CV
+                    plateau[X,Y] = [[X,Y],"case_vide","",0,case_vide]
                     p[0] = [a,b]
                     plateau[a,b] = p
                     return [a, b], plateau, morts
@@ -220,13 +217,13 @@ def roque(roi, tour, plateau, nb_echecs) :
                     roi[0] = [0, 2]
                     tour[0] = [0, 3]
                     plateau[0,2], plateau[0,3] = roi, tour
-                    plateau[0,4], plateau[0,0] = CV, CV
+                    plateau[0,4], plateau[0,0] = [[0,4],"case_vide","",0,case_vide], [[0,0],"case_vide","",0,case_vide]
                     return roi, tour, plateau
                 else :                          # petit roque
                     roi[0] = [0, 6]
                     tour[0] = [0, 5]
                     plateau[0,6], plateau[0,5] = roi, tour
-                    plateau[0,4], plateau[0,7] = CV, CV
+                    plateau[0,4], plateau[0,7] = [[0,4],"case_vide","",0,case_vide], [[0,7],"case_vide","",0,case_vide]
                     return roi, tour, plateau
         else :                                  # roque noir
             if roi[0] != [7, 4] and tour[0] not in {[7, 0], [7, 7]} :
@@ -236,13 +233,13 @@ def roque(roi, tour, plateau, nb_echecs) :
                     roi[0] = [7, 2]
                     tour[0] = [7, 3]
                     plateau[7,2], plateau[7,3] = roi, tour
-                    plateau[7,4], plateau[7,0] = CV, CV
+                    plateau[7,4], plateau[7,0] = [[7,4],"case_vide","",0,case_vide], [[7,0],"case_vide","",0,case_vide]
                     return roi, tour, plateau
                 else :                          # petit roque
                     roi[0] = [7, 6]
                     tour[0] = [7, 5]
                     plateau[7,6], plateau[7,5] = roi, tour
-                    plateau[7,4], plateau[7,7] = CV, CV
+                    plateau[7,4], plateau[7,7] = [[7,4],"case_vide","",0,case_vide], [[7,7],"case_vide","",0,case_vide]
                     return roi, tour, plateau
 
 def promotion(p, piece, plateau, morts) :
