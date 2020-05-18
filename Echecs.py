@@ -1,6 +1,6 @@
 ## RESUME DE NOTRE PROJET
 
-'''Notre projet d'informatique porte sur l'implémentation d'un jeu d'échecs et de stratégies. Avant de réfléchir à une quelconque stratégie, l'un d'entre nous s'est chargé de coder l'ensemble des règles du jeu d'échecs, en commençant par les règles de déplacements des pièces, puis en programmant le reste (comment vérifier si un joueur est en échec, comment caractériser l'échec et mat...). Nous avons également ajouté les règles moins essentielles du jeu, telles que la prise en passant, le roque et la promotion d'un pion. En parallèle, l'autre membre de notre binôme s'est occupé de l'interface graphique de notre projet. Nous sommes soucieux d'avoir un programme qui puisse être joué de manière assez simple, en cliquant sur une pièce puis sur la case sur laquelle on veut la déplacer. Il a donc fallu créer le visuel du plateau ainsi que des boutons cliquables sur chaque case de ce dernier. Enfin, nous nous sommes tous deux penchés sur une stratégie à adopter afin que l'utilisateur puisse jouer contre l'ordinateur. '''
+'''Notre projet d'informatique porte sur l'implémentation d'un jeu d'échecs et de stratégies. Avant de réfléchir à une quelconque stratégie, l'un d'entre nous s'est chargé de coder l'ensemble des règles du jeu d'échecs, en commençant par les règles de déplacements des pièces, puis en programmant le reste (comment vérifier si un joueur est en échec, comment caractériser l'échec et mat...). Nous avons également ajouté les règles moins essentielles du jeu, telles que le roque et la promotion d'un pion. En parallèle, l'autre membre de notre binôme s'est occupé de l'interface graphique de notre projet. Nous sommes soucieux d'avoir un programme qui puisse être joué de manière assez simple, en cliquant sur une pièce puis sur la case sur laquelle on veut la déplacer. Il a donc fallu créer le visuel du plateau ainsi que des boutons cliquables sur chaque case de ce dernier. Enfin, nous nous sommes tous deux penchés sur une stratégie à adopter afin que l'utilisateur puisse jouer contre l'ordinateur. L'implémentation de cette stratégie consiste à créer une fonction d'évaluation du plateau qui attribue à chaque joueur un certain nombre de points, puis à renvoyer le déplacement qui maximise ce nombre de points. Nous avons prévu deux niveaux de difficulté pour l'ordinateur, avec deux types destratégies différentes. '''
 
 ## IMPORTATION DES MODULES NECESSAIRES
 import numpy
@@ -11,7 +11,7 @@ import random
 ## IMPLEMENTATION DES REGLES DE DEPLACEMENT
 ''' Dans chaque fonction de déplacement suivante p représentera une pièce. Cette pièce est représentée sous la forme d'une liste [[X,Y], type, couleur, numero, image, bool] où [X,Y] seront les coordonnées sur le plateau, type le type de pièce (roi, dame...), couleur la couleur à laquelle appartient la pièce (noirs ou blancs), numero permet de distinguer les pièces qui sont identiques, image correspond à la représentation graphique de la pièce sur l'interface et bool indique si la pièce a déjà bougé ou non. Cette variable est utile pour le roque.
 a, b sont les coordonnées de la case où on déplace p
-Le plateau est quant à lui représenté par une matrice. plateau[a,b] renvoit la pièce qui se trouve sur les coordonnées (a,b) du plateau. On caractérisera les cases vides par CV, définie par : [[0,0],"case_vide","",0,case_vide, False], où case_vide correspond à l'image de la case vide sur l'interface graphique.
+Le plateau est quant à lui représenté par une matrice. plateau[a,b] renvoiela pièce qui se trouve sur les coordonnées (a,b) du plateau. On caractérisera les cases vides par CV, définie par : [[0,0],"case_vide","",0,case_vide, False], où case_vide correspond à l'image de la case vide sur l'interface graphique.
 La variable morts en argument de chaque fonction correspond à la liste des pièces éliminées au cours de la partie. '''
 
 ## Pion
@@ -60,7 +60,7 @@ def deplacement_pion(p, a, b, plateau, morts):
 
 ''' Pour se déplacer avec la tour, il est nécessaire de créer une fonction qui indique si le déplacement que l'on souhaite n'implique pas de traverser une pièce, auquel cas ce déplacement est impossible.'''
 
-def traverse_tour(a, b, X, Y, plateau) :                         # renvoit si on peut se déplacer sans traverser de pièce
+def traverse_tour(a, b, X, Y, plateau) :                         # renvoie si on peut se déplacer sans traverser de pièce
     if a != X :                                         # déplacement horizontal
             if a < X :
                 for coord in range(a+1, X) :
@@ -566,7 +566,7 @@ def liste_deplacements_piece(piece, plateau, morts):
     return liste_deplacements
 
 
-'''Cependant, cette fonction ne prend pas en compte le fait que le déplacement d'une pièce puisse être compromis car il impliquerait de mettre le roi en échec. Par conséquent, nous avons codé la fonction suivante, qui prend cet aspect en compte et renvoit la nouvelle liste de déplacements possibles par pièce, sans y compter les déplacements qui mettraient en échec.'''
+'''Cependant, cette fonction ne prend pas en compte le fait que le déplacement d'une pièce puisse être compromis car il impliquerait de mettre le roi en échec. Par conséquent, nous avons codé la fonction suivante, qui prend cet aspect en compte et renvoie la nouvelle liste de déplacements possibles par pièce, sans y compter les déplacements qui mettraient en échec.'''
 
 def liste_deplacements_possibles(piece, plateau, morts) :
     liste = liste_deplacements_piece(piece, plateau, morts)
@@ -613,7 +613,7 @@ def liste_deplacements_possibles(piece, plateau, morts) :
     return liste_finale
 
 
-''' A chaque tour de jeu, il est nécessaire de savoir si un joueur est en échec ou non. Pour savoir cela, nous avons créé la fonction test_echec qui prend en argument la matrice du plateau, la liste des morts et le nombre d'échecs de chaque joueur depuis le début de la partie. test_echec renvoit un booléen, la liste des pièces mises en échec s'il y a échec et le nombre d'échecs actualisé.'''
+''' A chaque tour de jeu, il est nécessaire de savoir si un joueur est en échec ou non. Pour savoir cela, nous avons créé la fonction test_echec qui prend en argument la matrice du plateau, la liste des morts et le nombre d'échecs de chaque joueur depuis le début de la partie. test_echec renvoie un booléen, la liste des pièces mises en échec s'il y a échec et le nombre d'échecs actualisé.'''
 
 def test_echec(plateau, morts, nb_echecs):
     noirs, blancs = find_color(plateau, morts)
@@ -796,7 +796,12 @@ def reinitialisation_couleur_plateau():
                 globals()[ch]['background'] = 'wheat'
 
 
-## JOUER AVEC L'ORDINATEUR
+## IMPLEMENTATION DE LA STRATEGIE
+# Evaluation du plateau
+
+'''Afin d'implémenter une stratégie, il est nécessaire de créer une fonction qui évalue le plateau pour chaque joueur et qui attribue à chacun un certain nombre de points. '''
+
+''' Tout d'abord, on attribue à chaque pièce une certaine valeur. Cette fonction sera utilisée lorsqu'il faudra par exemple compter les points des joueurs, en fonction des pièces qui ont été éliminées.'''
 
 def points_piece(piece):
     points = 0
@@ -812,12 +817,18 @@ def points_piece(piece):
             points = 9
     return points
 
+
+''' La fonction suivante prend en argument la liste des pièces éliminées d'une certaine couleur et renvoie la somme des points perdus par le joueur.'''
+
 def points_morts(color):
     points = 0
-    if color == []:
+    if color != []:
         for piece in color:
             points += points_morts(piece)
     return points
+
+
+''' Avec ces premières attributions de points, nous pouvons alors définir une fonction d'évaluation du plateau .'''
 
 def evalue_plateau(plateau, nb_echecs, morts):
     points = {"blancs" : 0, "noirs" : 0}
@@ -828,7 +839,7 @@ def evalue_plateau(plateau, nb_echecs, morts):
             morts_blancs.append(p)
         else:
             morts_noirs.append(p)
-
+    # on initialise les points perdus par chacun des joueurs en soustrayant le nombre de points perdus à cause des pièces qui se sont fait éliminer
     points["blancs"] -= points_morts(morts_noirs)
     points["noirs"] -= points_morts(morts_noirs)
     Test, color, _ = test_echec(plateau, morts, nb_echecs)         # on enlève des points si le roi est actuellement en échec
@@ -845,12 +856,75 @@ def evalue_plateau(plateau, nb_echecs, morts):
         points["noirs"] += delta
     return points
 
-def minmax(plateau, nb_echecs, morts, difficulte):
+
+# Première stratégie : niveau de difficulté faible
+
+''' Dans cette première fonction, on cherche à maximiser les points du joueurs sans anticiper grandement les déplacements futurs du joueur adverse. Ainsi, cette fonction renvoie la pièce à choisir et le coup à effectuer pour avoir un maximum de points. Pour avoir des choix de déplacements plus pertinents, on va attribuer des points bonus et malus selon si le coup choisi permet d'éliminer une pièce, d'en menacer une, ou bien mène à l'élimination de la pièce ayant effectué le coup. Ces bonus/malus sont alors déterminés à partir de la fonction points_piece de sorte que l'algorithme veuille éliminer une pièce forte comme une dame ou un fou grâce à un pion. '''
+
+def meilleur_coup_fct(color_name, plateau, nb_echecs, morts):
+    noirs, blancs = find_color(plateau, morts)
+
+    meilleure_piece, meilleur_deplacement = 0, 0
+    if color_name == "noirs":
+        other_color_name = "blancs"
+        color, other_color = noirs, blancs
+    else :
+        other_color_name = "noirs"
+        other_color, color = noirs, blancs
+    init_point = 0                            # on initialise à une valeur très petite pour être sur qu'un meilleur déplacement est possible
+    for piece in color :
+        points_bonus = 0
+        for couple in liste_deplacements_possibles(piece, plateau, morts):
+            a, b = couple[0], couple[1]
+            copie_plateau = copy.copy(plateau)
+            copie_piece = copy.copy(piece)
+            copie_nb_echecs = copy.copy(nb_echecs)
+            copie_morts = copy.copy(morts)
+            deplacement(copie_piece, a, b, copie_plateau, copie_morts)
+            if piece[1] == "pion":
+                    points_bonus -= 1
+            if copie_morts != []:
+                if copie_morts[-1][2] == other_color_name :
+                    points_bonus += 5*points_piece(copie_morts[-1][1]) # on récompense le fait que la pièce en élimine une autre
+            if color_name == "noirs":
+                color, other_color = noirs, blancs
+
+            else :
+                other_color, color = noirs, blancs
+            for piece_ennemie in other_color :
+                liste = liste_deplacements_possibles(copie_piece, copie_plateau, copie_morts)
+                liste_adverse = liste_deplacements_possibles(piece_ennemie, copie_plateau, copie_morts)
+                if copie_piece[0] in liste_adverse:                        # on sanctionne le fait que la pièce se fasse éliminer
+                    points_bonus -= 3*points_piece(copie_piece)
+                if piece_ennemie in liste :                                # on récompense le fait que la pièce menace une pièce adverse
+                    points_bonus += 3*points_piece(copie_piece)
+            points = evalue_plateau(copie_plateau, copie_nb_echecs, copie_morts)[color_name] + points_bonus
+            if points > init_point :
+                meilleure_piece = piece
+                meilleur_deplacement = couple
+
+    if meilleure_piece == 0 and meilleur_deplacement == 0:  # si aucun déplacement n'est satisfaisant, on en choisit un au hasard
+        liste = []
+        for piece in color:
+            if liste_deplacements_possibles(piece, plateau, morts) != []:
+                liste.append(piece)
+        meilleure_piece = liste[random.randint(0, len(liste) - 1)]
+        meilleurs_coups_possibles = liste_deplacements_possibles(meilleure_piece, plateau, morts)
+        meilleur_deplacement = meilleurs_coups_possibles[random.randint(0, len(meilleurs_coups_possibles)-1)]
+
+    return meilleure_piece, meilleur_deplacement
+
+
+# Seconde stratégie : niveau de difficulté plus élevé
+
+'''Pour cette seconde stratégie, nous avons décidé d'implémenter l'algorithme MinMax. Il s'applique bien ici car le jeu d'échecs est un jeu à somme nulle. Dans notre cas, cet algorithme consiste à simuler chaque noeud possible pour le joueur, i.e. chaque combinaison pièce/coup qu'il puisse jouer. Au sein de chaque noeud, on simule chaque noeud adverse, puis on évalue le plateau pour le premier joueur. L'adversaire cherchant le coup qui minimise le nombre de points du premier joueur, on conserve alors pour chaque noeud du joueur le minimum des points qu'il puisse avoir à la suite du coup de son adversaire. Enfin, parmi la liste de ces minima, le joueur choisira le coup pour lequel il obtient le maximum de cette liste. Par conséquent, l'algorithme MinMax renverra le meilleur coup qu'il puisse effectuer. Là encore, pour avoir plus de précisions dans le calcul des points, on met en place des points bonus/malus qui viendront s'ajouter au total du nombre de points du joueurs donné par la fonction evalue_plateau.'''
+
+def minmax(color_name, plateau, nb_echecs, morts):     
     global joueur
 
     color_name = copy.copy(joueur)
     noirs, blancs = find_color(plateau, morts)
-    if difficulte == False:             # on choisit un jeu facile --> prévision du meilleur coup sans anticipation
+    if difficulte == False:             # on choisit un jeu de difficulté faible
         return meilleur_coup_fct(color_name, plateau, nb_echecs, morts)
 
     else :
@@ -906,9 +980,23 @@ def minmax(plateau, nb_echecs, morts, difficulte):
             for elem in liste_max_node:
                 if elem[2] == max_node:
                     choix = elem
-
             meilleure_piece = choix[0]
             meilleur_coup = choix[1]
+    return meilleure_piece, meilleur_coup
+
+
+# Choix de la stratégie
+
+''' Enfin, on résume ces deux fonctions de stratégie dans une seule. La variable difficulté est un booléen. Si ce booléen vaut True, alors on renvoie la stratégie MinMax. Sinon on renvoit la stratégie donnée par meilleur_coup_fct. Pour éviter tout problème, dans le cas où aucun déplacement n'est satisfaisant, on renverra un coup aléatoire.'''
+
+def strategie(plateau, nb_echecs, morts, difficulte):
+    global joueur
+    color_name = copy.copy(joueur)
+    
+    if difficulte == False : 
+        meilleure_piece, meilleur_coup = meilleur_coup_fct(color_name, plateau, nb_echecs, morts)
+    else :
+        meilleure_piece, meilleur_coup = minmax(color_name, plateau, nb_echecs, morts)
     if meilleure_piece == 0 and meilleur_coup == 0:  # si aucun déplacement n'est satisfaisant, on en choisit un au hasard
         liste = []
         for piece in color:
@@ -919,62 +1007,6 @@ def minmax(plateau, nb_echecs, morts, difficulte):
         meilleur_coup = meilleurs_coups_possibles[random.randint(0, len(meilleurs_coups_possibles)-1)]
 
     return meilleure_piece, meilleur_coup
-
-
-
-def meilleur_coup_fct(color_name, plateau, nb_echecs, morts):
-    noirs, blancs = find_color(plateau, morts)
-
-    meilleure_piece, meilleur_deplacement = 0, 0
-    if color_name == "noirs":
-        other_color_name = "blancs"
-        color, other_color = noirs, blancs
-    else :
-        other_color_name = "noirs"
-        other_color, color = noirs, blancs
-    init_point = 0                            # on initialise à une valeur très petite pour être sur qu'un meilleur déplacement est possible
-    for piece in color :
-        points_bonus = 0
-        for couple in liste_deplacements_possibles(piece, plateau, morts):
-            a, b = couple[0], couple[1]
-            copie_plateau = copy.copy(plateau)
-            copie_piece = copy.copy(piece)
-            copie_nb_echecs = copy.copy(nb_echecs)
-            copie_morts = copy.copy(morts)
-            deplacement(copie_piece, a, b, copie_plateau, copie_morts)
-            if piece[1] == "pion":
-                    points_bonus -= 1
-            if copie_morts != []:
-                if copie_morts[-1][2] == other_color_name :
-                    points_bonus += 5*points_piece(copie_morts[-1][1]) # on récompense le fait que la pièce en élimine une autre
-            if color_name == "noirs":
-                color, other_color = noirs, blancs
-
-            else :
-                other_color, color = noirs, blancs
-            for piece_ennemie in other_color :
-                liste = liste_deplacements_possibles(copie_piece, copie_plateau, copie_morts)
-                liste_adverse = liste_deplacements_possibles(piece_ennemie, copie_plateau, copie_morts)
-                if copie_piece[0] in liste_adverse:                        # on sanctionne le fait que la pièce se fasse éliminer
-                    points_bonus -= 3*points_piece(copie_piece)
-                if piece_ennemie in liste :                                # on récompense le fait que la pièce menace une pièce adverse
-                    points_bonus += 3*points_piece(copie_piece)
-            points = evalue_plateau(copie_plateau, copie_nb_echecs, copie_morts)[color_name] + points_bonus
-            if points > init_point :
-                meilleure_piece = piece
-                meilleur_deplacement = couple
-
-    if meilleure_piece == 0 and meilleur_deplacement == 0:  # si aucun déplacement n'est satisfaisant, on en choisit un au hasard
-        liste = []
-        for piece in color:
-            if liste_deplacements_possibles(piece, plateau, morts) != []:
-                liste.append(piece)
-        meilleure_piece = liste[random.randint(0, len(liste) - 1)]
-        meilleurs_coups_possibles = liste_deplacements_possibles(meilleure_piece, plateau, morts)
-        meilleur_deplacement = meilleurs_coups_possibles[random.randint(0, len(meilleurs_coups_possibles)-1)]
-
-    return meilleure_piece, meilleur_deplacement
-
 
 ## L'INTERFACE GRAPHIQUE
 
