@@ -680,7 +680,7 @@ def event(piece):
 
         # On distingue les cas en fonction du mode_de_jeu_choisi
         if mode_de_jeu_choisi == "bouton_ordi_vs_joueur" and joueur == 'noirs':
-            piece_ordi, deplacement_ordi = minmax(plateau, nb_echecs, morts, difficulte)
+            piece_ordi, deplacement_ordi = strategie(plateau, nb_echecs, morts, difficulte)
             a, b = deplacement_ordi[0], deplacement_ordi[1]
             ch = "case_"+str(a)+"_"+str(b)
             piece_selectionnee = piece_ordi
@@ -688,7 +688,7 @@ def event(piece):
             deplacement_effectif(a, b, ch)
 
         elif mode_de_jeu_choisi == "bouton_2ordis":
-            piece_ordi, deplacement_ordi = minmax(plateau, nb_echecs, morts, difficulte)
+            piece_ordi, deplacement_ordi = strategie(plateau, nb_echecs, morts, difficulte)
             a, b = deplacement_ordi[0], deplacement_ordi[1]
             ch = "case_"+str(a)+"_"+str(b)
             piece_selectionnee = piece_ordi
